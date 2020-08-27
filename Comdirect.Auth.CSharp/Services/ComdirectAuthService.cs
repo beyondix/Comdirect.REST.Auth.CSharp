@@ -44,7 +44,7 @@ namespace Comdirect.Auth.CSharp.Services
 
             httpClient.DefaultRequestHeaders
                 .Accept
-                .Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var requestParameters = new Dictionary<string, string>
             {
@@ -69,7 +69,7 @@ namespace Comdirect.Auth.CSharp.Services
 
             httpClient.DefaultRequestHeaders
                 .Accept
-                .Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var comdirectGetTokenRequest = new ComdirectGetTokenRequest
             {
@@ -107,14 +107,14 @@ namespace Comdirect.Auth.CSharp.Services
                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             httpClient.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Authorization", $"Bearer {accessToken}");
+                    new AuthenticationHeaderValue("Bearer", accessToken);
 
             var httpRequestInfo = new { clientRequestId = new { sessionId = SessionId, requestId = Guid.NewGuid() } };
             var serializedHttpRequestInfo = JsonConvert.SerializeObject(httpRequestInfo);
 
             httpClient.DefaultRequestHeaders.Add("x-http-request-info", serializedHttpRequestInfo);
 
-            var request = new HttpRequestMessage(HttpMethod.Post, sessionStatusEndpoint);
+            var request = new HttpRequestMessage(HttpMethod.Get, sessionStatusEndpoint);
 
             var result = await httpClient.SendAsync(request);
 
@@ -129,7 +129,7 @@ namespace Comdirect.Auth.CSharp.Services
             using var httpClient = new HttpClient();
 
             httpClient.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Authorization", $"Bearer {accessToken}");
+                    new AuthenticationHeaderValue("Bearer", accessToken);
 
             httpClient.DefaultRequestHeaders
               .Accept
@@ -144,9 +144,7 @@ namespace Comdirect.Auth.CSharp.Services
 
             httpClient.DefaultRequestHeaders.Add("x-http-request-info", serializedHttpRequestInfo);
 
-            var request = new HttpRequestMessage(HttpMethod.Post, validateSessionEndpoint);
-
-            var result = await httpClient.SendAsync(request);
+            var result = await httpClient.PostAsync(validateSessionEndpoint, content);
 
             var responseAuthHeader = result.Headers.GetValues("x-once-authentication-info").First();
             var comdirectValidateSessionResponse = JsonConvert.DeserializeObject<ComdirectValidateSessionResponse>(responseAuthHeader);
@@ -161,7 +159,7 @@ namespace Comdirect.Auth.CSharp.Services
             using var httpClient = new HttpClient();
 
             httpClient.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Authorization", $"Bearer {accessToken}");
+                    new AuthenticationHeaderValue("Bearer", accessToken);
 
             httpClient.DefaultRequestHeaders
                .Accept
@@ -176,8 +174,7 @@ namespace Comdirect.Auth.CSharp.Services
             var comdirectActivateTanRequest = new ComdirectActivateTanRequest { Identifier = sessionIdentifier };
             using var content = new StringContent(JsonConvert.SerializeObject(comdirectActivateTanRequest), System.Text.Encoding.UTF8, "application/json");
 
-            var request = new HttpRequestMessage(HttpMethod.Post, activateTanEndpoint);
-            await httpClient.SendAsync(request);
+            await httpClient.PatchAsync(activateTanEndpoint, content);
         }
 
         private async Task<ValidComdirectToken> RunSecondaryFlow(string accessToken)
@@ -188,7 +185,7 @@ namespace Comdirect.Auth.CSharp.Services
 
             httpClient.DefaultRequestHeaders
                .Accept
-               .Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+               .Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var requestParameters = new Dictionary<string, string>
             {

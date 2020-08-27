@@ -27,5 +27,17 @@ namespace Comdirect.Auth.CSharp.Dtos
 
         [JsonProperty("kontaktId")]
         public string KontaktId { get; set; }
+
+        public override string ToString()
+        {
+            return $"{nameof(AccessToken) + ": " + AccessToken} \n" +
+                $"{nameof(TokenType) + ": " + TokenType} \n" +
+                $"{nameof(RefreshToken) + ": " + RefreshToken} \n" +
+                $"{nameof(ExpiresIn) + ": " + ExpiresIn} \n" +
+                $"{nameof(Scope) + ": " + Scope} \n" +
+                $"{nameof(Kdnr) + ": " + Kdnr} \n" +
+                $"{nameof(Bpid) + ": " + Bpid} \n" +
+                $"{nameof(KontaktId) + ": " + KontaktId} \n";
+        }
     }
 }

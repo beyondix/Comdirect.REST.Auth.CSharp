@@ -10,6 +10,8 @@ If you just ask five times for a TAN challenge without activating that TAN your 
 You need to activate the TAN in your comdirect PhotoTAN app. If you provide the wrong TAN three times in a row your account is blocked. 
 After two not successfull attempts you can reset the error counter at the comdirect website.
 
+In current version you have one minute to activate you TAN. So please prepare your mobile phone with the photoTAN App before.
+
 ## Usage
 
 See sample: `Comdirect.Auth.CSharp.Sample`. This is a console app where you can test the code.
